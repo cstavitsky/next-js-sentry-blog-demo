@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@mapbox/rehype-prism": "^0.6.0",
+    "@sentry/nextjs": "^6.13.2",
     "date-fns": "^2.21.3",
     "gray-matter": "^4.0.3",
     "next": "^10.2.0",
@@ -24,7 +25,8 @@
     "remark-parse": "^9.0.0",
     "remark-rehype": "^8.1.0",
     "styled-jsx-plugin-postcss": "^4.0.1",
-    "unified": "^9.2.1"
+    "unified": "^9.2.1",
+    "webpack": "^5.56.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.2.0",

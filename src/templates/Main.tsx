@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { Navbar } from '../navigation/Navbar';
 import { Config } from '../utils/Config';
+import * as Sentry from '@sentry/nextjs';
 
 type IMainProps = {
   meta: ReactNode;
@@ -22,6 +23,62 @@ const Main = (props: IMainProps) => (
         </div>
         <div>
           <Navbar>
+          <button
+        type="button"
+        onClick={() => {
+          throw new Error("Sentry Frontend Error");
+        }}
+      >
+        Throw error&nbsp;&nbsp;&nbsp;
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          try {
+            return 1/0
+          }
+          catch (exception) {
+            Sentry.captureException(exception)
+          }
+        }}
+      >
+        Handled error&nbsp;&nbsp;&nbsp;
+      </button>
+      <button
+        type="button"
+        onClick={async () => 
+          { 
+            console.log('Button clicked, starting transaction');
+            const transaction = Sentry.startTransaction({ name: 'Frontend - Making API Call' });
+
+            Sentry.getCurrentHub().configureScope(scope => scope.setSpan(transaction));
+
+            console.log('Calling api');
+            const response = await fetch('/api/error');
+            console.log(response.ok)
+            if(!response.ok) {
+              const { status: statusCode, statusText } = response;
+
+              const err = new Error(`API Call to /api/error failed: ${statusCode} ${statusText}`);
+
+              Sentry.withScope((scope) => {
+                scope.setTags({
+                  statusCode,
+                  statusText
+                });
+              })
+
+              console.log("response was not OK...")
+              Sentry.captureException(err);
+            }
+            console.log("Response data:", response.json());
+            console.log("Finishing transaction");
+            transaction.finish();
+          }
+        }
+      >
+        Generate Server Error
+      </button>
             <li className="mr-6">
               <Link href="/">
                 <a>Home</a>
