@@ -5,10 +5,16 @@
 import * as Sentry from '@sentry/nextjs';
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
+const tracingOrigins = ['localhost', 'empowerplant.io', 'run.app', 'appspot.com', /^\//];
 
 Sentry.init({
   dsn: SENTRY_DSN || 'https://c4faa1b2949e45ba8095ecbe9c288f2b@o87286.ingest.sentry.io/5992298',
   // Adjust this value in production, or use tracesSampler for greater control
+  integrations: [
+    new Sentry.Integrations.BrowserTracing({
+      tracingOrigins: tracingOrigins,
+    })
+  ],
   tracesSampleRate: 1.0,
   // ...
   // Note: if you want to override the automatic release value, do not set a
