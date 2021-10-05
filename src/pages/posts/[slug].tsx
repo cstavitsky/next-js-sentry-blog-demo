@@ -57,7 +57,7 @@ export const getStaticPaths: GetStaticPaths<IPostUrl> = async () => {
         slug: post.slug,
       },
     })),
-    fallback: false,
+    fallback: 'blocking',
   };
 };
 
@@ -90,6 +90,7 @@ export const getStaticProps: GetStaticProps<IPostProps, IPostUrl> = async ({ par
       image: post.image,
       content,
     },
+    revalidate: 1,
   };
 };
 
