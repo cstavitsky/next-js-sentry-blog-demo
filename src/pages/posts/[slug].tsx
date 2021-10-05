@@ -71,6 +71,14 @@ export const getStaticProps: GetStaticProps<IPostProps, IPostUrl> = async ({ par
     'content',
     'slug',
   ]);
+
+  // Make request to deliberately slow endpoint for performance demo
+  console.log('Fetching products...', post.title);
+  const products = await fetch(
+    'https://application-monitoring-flask-dot-sales-engineering-sf.appspot.com/products',
+  );
+  console.log('products', products);
+
   const content = await markdownToHtml(post.content || '');
 
   return {
